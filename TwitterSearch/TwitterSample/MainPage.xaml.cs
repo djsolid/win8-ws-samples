@@ -7,6 +7,7 @@ using TwitterSample.Data.TwitterSample.Data;
 using TwitterSample.Enums;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.System;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -25,6 +26,7 @@ namespace TwitterSample
     public sealed partial class MainPage : Page, INotifyPropertyChanged
     {
         private bool _isSearching;
+        private string _errorMessage;
 
         public MainPage() {
             this.InitializeComponent();
@@ -41,14 +43,27 @@ namespace TwitterSample
 
         private async void Button_Click_1(object sender, RoutedEventArgs e) {
             IsSearching = true;
+            ErrorMessage = string.Empty;
             //Get the search term
             string searchTerm = txtSearchKey.Text;
             //Reset the listview
             itemListView.ItemsSource = null;
             //Load data 
-            await TwitterDataSource.LoadRemoteDataAsync(searchTerm, ResultType.Recent);
-            IsSearching = false;
-            itemListView.ItemsSource = TwitterDataSource.GetStoredTweets();
+            try {
+                itemListView.ItemsSource = await TwitterDataSource.LoadTweets(searchTerm, ResultType.Recent);
+            }
+            catch (Exception ex) {
+                ErrorMessage = "An error occurred: " + ex.Message;
+            }
+            finally {
+                IsSearching = false;
+            }
+
+        }
+
+        public string ErrorMessage {
+            get { return _errorMessage; }
+            set { _errorMessage = value; OnPropertyChanged("ErrorMessage"); }
         }
 
         public bool IsSearching {
@@ -61,6 +76,11 @@ namespace TwitterSample
         private void OnPropertyChanged(string propertyName) {
             PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null) handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private void txtSearchKey_KeyUp_1(object sender, KeyRoutedEventArgs e) {
+            if (e.Key == VirtualKey.Enter)
+                Button_Click_1(sender, null);
         }
     }
 }

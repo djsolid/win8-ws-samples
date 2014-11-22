@@ -16,11 +16,4 @@ namespace TwitterSample.Models.DTO
         public int since_id { get; set; }
         public string since_id_str { get; set; }
     }
-
-
-
-
-
-
-
 }

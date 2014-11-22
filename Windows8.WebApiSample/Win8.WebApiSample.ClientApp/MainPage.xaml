@@ -1,0 +1,50 @@
+﻿<Page
+    x:Class="Win8.WebApiSample.ClientApp.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Win8.WebApiSample.ClientApp"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="White">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Image Source="Assets/ribbon.jpg" VerticalAlignment="Top" Width="693" />
+        <ProgressBar VerticalAlignment="Top"  
+                     Visibility="{Binding IsWorking, Converter={StaticResource boolToVisibility}}"
+                     IsIndeterminate="{Binding IsWorking}" Margin="-2,0,2,0" />
+        <StackPanel Orientation="Horizontal" Margin="0,30,0,0" Grid.Row="1"
+                    HorizontalAlignment="Center">
+            <TextBlock Margin="0,5,10,0" FontSize="20" VerticalAlignment="Top" >Say your name:</TextBlock>
+            <TextBox Width="200" VerticalAlignment="Top" Name="txtName" KeyUp="txtName_KeyUp_1"></TextBox>
+
+            <Button Content="Make Service Call" Margin="15,0,0,0" 
+                    IsEnabled="{Binding IsWorking,Converter={StaticResource boolNegation}}"
+                    VerticalAlignment="Top" Click="Button_Click_1"/>
+        </StackPanel>
+        <StackPanel Orientation="Vertical" Grid.Row="2" Margin="0,5,10,0" >
+            <TextBlock FontSize="47" 
+                   Foreground="{StaticResource ApplicationForegroundThemeBrush}"
+                   Text="{Binding ResponseMessage}"
+                   VerticalAlignment="Top" HorizontalAlignment="Center" />
+            <TextBlock Margin="0,25,10,0" FontSize="187" 
+                   Text="Thank you!"
+                   Visibility="{Binding IsTheEnd, Converter={StaticResource boolToVisibility}}"
+                   VerticalAlignment="Top" HorizontalAlignment="Center" />
+            <TextBlock Margin="0,25,10,0" FontSize="87" 
+                   Text="ping me during the event "
+                   Visibility="{Binding IsTheEnd, Converter={StaticResource boolToVisibility}}"
+                   VerticalAlignment="Top" HorizontalAlignment="Center" />
+            <TextBlock Margin="0,25,10,0" FontSize="127" 
+                   Text="or tweet @djsolid"
+                   Visibility="{Binding IsTheEnd, Converter={StaticResource boolToVisibility}}"
+                   VerticalAlignment="Top" HorizontalAlignment="Center" />
+        </StackPanel>
+        
+    </Grid>
+
+</Page>
